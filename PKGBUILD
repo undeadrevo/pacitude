@@ -1,5 +1,5 @@
 pkgname=pacitude
-pkgver=6.25ec736
+pkgver=1.0
 pkgrel=1
 pkgdesc="a pacman/pacaur wrapper with apt inspired syntax"
 arch=('i686' 'x86_64')
