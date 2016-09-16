@@ -5,11 +5,11 @@ pkgver=1.0
 pkgrel=1
 pkgdesc="a pacman/pacaur wrapper with apt inspired syntax"
 arch=('i686' 'x86_64')
-url="https://git.shittyne.ws/sachikos/pacitude.git"
+url="https://github.com/undeadrevo/pacitude"
 license=('WTFPL')
 depends=('sudo' 'pacaur' 'cower')
 makedepends=('git')
-source=('git://git.shittyne.ws/sachikos/pacitude.git')
+source=('git://github.com/undeadrevo/pacitude.git')
 md5sums=('SKIP')
 
 pkgver() {
