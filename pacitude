@@ -44,10 +44,10 @@ case "$SYNTAX" in
                 pacaur -Qi $INPUT
                 ;;
         clean)
-                echo "cleaning pacman cache..."
+                printf "%s\n" $"cleaning pacman cache..."
                 sleep 1s
                 pacaur -Sc
-                echo "cleaning pacaur cache..."
+                printf "%s\n" $"cleaning pacaur cache..."
                 sleep 1s
                 rm -rf $HOME/.cache/pacaur/*
                 ;;
@@ -67,25 +67,24 @@ case "$SYNTAX" in
                 makepkg -sri
                 ;;
         help)
-                echo "pacitude - a pacaur wrapper with apt inspired syntax"
-                echo "          help - print this help"
-                echo "          install <package> - installs a package"
-                echo "          search <package> - searches for a package in the repos"
-                echo "          remove <package> - removes a package"
-                echo "          upgrade - upgrades the system"
-                echo "          update - only refreshes the repos (bad practice, do not run this without running 'upgrade' immediately after"
-                echo "          download <package> - only download a package into pacman's cache without installing it"
-                echo "          autoremove - remove dependencies that are no longer needed (usually should not be needed as 'remove' should remove dependencies along with the package)"
-                echo "          show <package> - shows information about the package"
-                echo "          clean - clears pacman and pacaur's caches"
-                echo "          policy - prints mirrorlist"
-                echo "          list - lists all installed packages"
-                echo "          listm - lists all installed packages with all info"
-                echo "          listl - lists how many packages are installed"
-                echo "          build - builds package from PKGBUILD"
+	            printf "%s\n" $"pacitude - a pacaur wrapper with apt inspired syntax"
+                printf "%s\n" $"          help - print this help"
+                printf "%s\n" $"          install <package> - installs a package"
+                printf "%s\n" $"          search <package> - searches for a package in the repos"
+                printf "%s\n" $"          remove <package> - removes a package"
+                printf "%s\n" $"          upgrade - upgrades the system"
+                printf "%s\n" $"          update - only refreshes the repos (bad practice, do not run this without running 'upgrade' immediately after"
+                printf "%s\n" $"          download <package> - only download a package into pacman's cache without installing it"
+                printf "%s\n" $"          autoremove - remove dependencies that are no longer needed (usually should not be needed as 'remove' should remove dependencies along with the package)"
+                printf "%s\n" $"          show <package> - shows information about the package"
+                printf "%s\n" $"          clean - clears pacman and pacaur's caches"
+                printf "%s\n" $"          policy - prints mirrorlist"
+                printf "%s\n" $"          list - lists all installed packages"
+                printf "%s\n" $"          listm - lists all installed packages with all info"
+                printf "%s\n" $"          listl - lists how many packages are installed"
+                printf "%s\n" $"          build - builds package from PKGBUILD"
                 ;;
         *)
-
-                echo "Insufficient paramaters. Use 'pacitude help' for more info"
+                printf "%s\n" $"Insufficient paramaters. Use 'pacitude help' for more info"
                 ;;
 esac
