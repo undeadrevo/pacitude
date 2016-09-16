@@ -67,22 +67,24 @@ case "$SYNTAX" in
                 makepkg -sri
                 ;;
         help)
-	            printf "%s\n" $"pacitude - a pacaur wrapper with apt inspired syntax"
-                printf "%s\n" $"          help - print this help"
-                printf "%s\n" $"          install <package> - installs a package"
-                printf "%s\n" $"          search <package> - searches for a package in the repos"
-                printf "%s\n" $"          remove <package> - removes a package"
-                printf "%s\n" $"          upgrade - upgrades the system"
-                printf "%s\n" $"          update - only refreshes the repos (bad practice, do not run this without running 'upgrade' immediately after"
-                printf "%s\n" $"          download <package> - only download a package into pacman's cache without installing it"
-                printf "%s\n" $"          autoremove - remove dependencies that are no longer needed (usually should not be needed as 'remove' should remove dependencies along with the package)"
-                printf "%s\n" $"          show <package> - shows information about the package"
-                printf "%s\n" $"          clean - clears pacman and pacaur's caches"
-                printf "%s\n" $"          policy - prints mirrorlist"
-                printf "%s\n" $"          list - lists all installed packages"
-                printf "%s\n" $"          listm - lists all installed packages with all info"
-                printf "%s\n" $"          listl - lists how many packages are installed"
-                printf "%s\n" $"          build - builds package from PKGBUILD"
+                cat <<-EOF
+	            pacitude - a pacaur wrapper with apt inspired syntax
+                          help - print this help
+                          install <package> - installs a package
+                          search <package> - searches for a package in the repos
+                          remove <package> - removes a package
+                          upgrade - upgrades the system
+                          update - only refreshes the repos (bad practice, do not run this without running 'upgrade' immediately after
+                          download <package> - only download a package into pacman's cache without installing it
+                          autoremove - remove dependencies that are no longer needed (usually should not be needed as 'remove' should remove dependencies along with the package)
+                          show <package> - shows information about the package
+                          clean - clears pacman and pacaur's caches
+                          policy - prints mirrorlist
+                          list - lists all installed packages
+                          listm - lists all installed packages with all info
+                          listl - lists how many packages are installed
+                          build - builds package from PKGBUILD
+EOF
                 ;;
         *)
                 printf "%s\n" $"Insufficient paramaters. Use 'pacitude help' for more info"
