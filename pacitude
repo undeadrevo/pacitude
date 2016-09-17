@@ -20,13 +20,13 @@ INPUT=$2
 
 case "$SYNTAX" in
         install)
-                pacaur -S $INPUT
+                pacaur -S "$INPUT"
                 ;;
         search)
-                pacaur -Ss $INPUT
+                pacaur -Ss "$INPUT"
                 ;;
         remove)
-                pacaur -Rs $INPUT
+                pacaur -Rs "$INPUT"
                 ;;
         upgrade)
                 pacaur -Su
@@ -35,13 +35,13 @@ case "$SYNTAX" in
                 pacaur -Sy
                 ;;
         download)
-                pacaur -Sw $INPUT
+                pacaur -Sw "$INPUT"
                 ;;
         autoremove)
                 pacaur -Qdtq | pacaur -Rs -
                 ;;
         show)
-                pacaur -Qi $INPUT
+                pacaur -Qi "$INPUT"
                 ;;
         clean)
                 printf "%s\n" $"cleaning pacman cache..."
@@ -49,7 +49,7 @@ case "$SYNTAX" in
                 pacaur -Sc
                 printf "%s\n" $"cleaning pacaur cache..."
                 sleep 1s
-                rm -rf $HOME/.cache/pacaur/*
+                rm -rf "$HOME/.cache/pacaur/*"
                 ;;
         policy)
                 less /etc/pacman.d/mirrorlist
