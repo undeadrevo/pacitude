@@ -74,7 +74,7 @@ case "$SYNTAX" in
                           search <package> - searches for a package in the repos
                           remove <package> - removes a package
                           upgrade - upgrades the system
-                          update - only refreshes the repos (bad practice, do not run this without running 'upgrade' immediately after
+                          update - only refreshes the repos (bad practice, do not run this without running 'upgrade' immediately after)
                           download <package> - only download a package into pacman's cache without installing it
                           autoremove - remove dependencies that are no longer needed (usually should not be needed as 'remove' should remove dependencies along with the package)
                           show <package> - shows information about the package
