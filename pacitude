@@ -38,7 +38,7 @@ case "$SYNTAX" in
                 pacaur -Sw $INPUT
                 ;;
         autoremove)
-                pacaur-Qdtq | pacaur -Rs -
+                pacaur -Qdtq | pacaur -Rs -
                 ;;
         show)
                 pacaur -Qi $INPUT
