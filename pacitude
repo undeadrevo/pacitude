@@ -16,7 +16,7 @@
 
 
 SYNTAX=$1
-INPUT=$2
+INPUT=${@:2}
 
 case "$SYNTAX" in
         install)
@@ -90,3 +90,7 @@ EOF
                 printf "%s\n" $"Insufficient paramaters. Use 'pacitude help' for more info"
                 ;;
 esac
+
+if [[ ! $INPUT ]]; then
+	printf "%s\n" $"Insufficient paramaters. Use 'pacitude help' for more info"
+fi
