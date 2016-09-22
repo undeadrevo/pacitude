@@ -26,34 +26,50 @@ CONFIG=$HOME/.pacitude
 export TEXTDOMAINDIR=/usr/share/locale
 export TEXTDOMAIN=pacitude
 
+logo () {
+	cat <<-EOF
+
+                    @@@@@@@@@@@@@@@@@@                    
+                @@@@@@@@@@@@@@@@@@@@@@@@@@                
+              @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@              
+            @@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@            
+            @@@@@@@@@@@@@@      @@@@@@@@@@@@@@@@          
+                @@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@          
+                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
+                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
+                        @@@@@@@@@@@@@@@@@@@@@@@@@@        
+                          @@@@@@@@@@@@@@@@@@@@@@@@        
+                            @@@@@@@@@@@@@@@@@@@@@@        
+                          @@@@@@@@@@@@@@@@@@@@@@@@        
+                        @@@@@@@@@@@@@@@@@@@@@@@@@@        
+                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
+                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
+                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          
+            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          
+            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@            
+              @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@              
+                @@@@@@@@@@@@@@@@@@@@@@@@@@                
+                    @@@@@@@@@@@@@@@@@@                    
+
+EOF
+}
+
 ### Start Script ###
 gost () {
     clear	
-cat <<-EOF
 
-  =================================================
-       .-.   .-.     .--.                         |
-      | OO| | OO|   / _.-' .-.   .-.  .-.   .''.  |
-      |   | |   |   \  '-. '-'   '-'  '-'   '..'  |
-      '^^^' '^^^'    '--'                         |
-  ===============.  .-.  .================.  .-.  |
-                 | |   | |                |  '-'  |
-                 | |   | |                |       |
-                 | ':-:' |                |  .-.  |
-                 |  '-'  |                |  '-'  |
-  ==============='       '================'       |
-
-EOF
+    logo
+    
     echo -e "$GREL                  pacitude $VER - A bash GUI for pacaur                 $NC"
     echo -e ""
-    echo -e "$(gettext '[1] Sync DB		[9] Info Packages    [Q] Quit')"
-    echo -e "$(gettext '[2] Update System	[10] Clear cache')"
+    echo -e "$(gettext '[1] Sync DB		[9] Info Packages    [H] Help pacitude')"
+    echo -e "$(gettext '[2] Update System	[10] Clear cache     [Q] Quit')"
     echo -e "$(gettext '[3] Install Packages    [11] PacDiffViewer')"
     echo -e "$(gettext '[4] Remove Packages	[12] Edit pacman.conf')"
-    echo -e "$(gettext '[5] Update Packages	[13] Pacman DB Optomize')"
-    echo -e "$(gettext '[6] Remove Dependencies	[14] Pacman DB Upgrade')"
-    echo -e "$(gettext '[7] Search Packages	[L] Log Pacman')"
-    echo -e "$(gettext '[8] Belongs To Files    [H] Help pacitude   ')"
+    echo -e "$(gettext '[5] Update Packages	[13] Edit mirrorlist')"
+    echo -e "$(gettext '[6] Remove Dependencies [14] Pacman DB Optomize')"
+    echo -e "$(gettext '[7] Search Packages	[15] Pacman DB Upgrade')"
+    echo -e "$(gettext '[8] Belongs To Files	[L] Log Pacman')"
     echo -e ""
     echo -e ""$YELLOW"$(gettext 'Run a Command or Number'):$NC"
   read opt
@@ -224,7 +240,7 @@ gost
 
 ### edit pacman.conf ###
 12|"edit pacman.conf")
-    echo -e ""$GRE"$(gettext 'Which programs do you want use?')$NC"
+    echo -e ""$GRE"$(gettext 'Which program do you want to use?')$NC"
     echo -e ""$GRE"$(gettext 'Write'): [N]nano [V]vim $NC"
   read PROGRAM
 case $PROGRAM in
@@ -244,13 +260,25 @@ esac
 gost
 ;;
 
-### pacman-db-upgrade ###
-13|"pacaur -C")
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacman-db-upgrade$NC"
-    echo -e""
-  sudo pacman-db-upgrade  
-    echo -e ""$GRE"$(gettext 'Upgrade successfully')$NC"
-sleep 3
+### edit mirrorlist ###
+13|"edit mirrorlist")
+    echo -e ""$GRE"$(gettext 'Which program do you want to use?')$NC"
+    echo -e ""$GRE"$(gettext 'Write'): [N]nano [V]vim $NC"
+  read PROGRAM
+case $PROGRAM in
+N|n|nano)
+  sudo nano /etc/pacman.d/mirrorlist
+gost
+;;
+V|v|vi|VI|vim|VIM)
+if [ -f /usr/bin/vim ]; then
+  sudo vim /etc/pacman.d/mirrorlist
+else
+  sudo vi /etc/pacman.d/mirrorlist
+fi
+gost
+;;
+esac
 gost
 ;;
 
@@ -266,6 +294,16 @@ gost
   read -p "$*"
 }
   pause
+gost
+;;
+
+### pacman-db-upgrade ###
+15|"pacaur -C")
+    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacman-db-upgrade$NC"
+    echo -e""
+  sudo pacman-db-upgrade  
+    echo -e ""$GRE"$(gettext 'Upgrade successfully')$NC"
+sleep 3
 gost
 ;;
 
