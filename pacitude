@@ -1,414 +1,188 @@
 #!/bin/bash
-# pacitude is a bash gui for pacaur
+
+# pacitude 2.0
+# --------------------------------
+# author    : Sachiko
+#             https://github.com/undeadrevo
+# project   : https://github.com/undeadrevo/pacitude
+# license   : LGPL-3.0 (http://opensource.org/licenses/lgpl-3.0.html)
 #
-# Creation-Date: 2011-02-28
-# Revision-Date: 2015-06-23
-#
-# Support: http://www.alexiobash.com
-# Mail: support@alexiobash.com
 
-### Set ###
-TEXTDOMAINDIR=/usr/share/locale
-TEXTDOMAIN=pacitude
-VER=1.0
-BLUE="\033[7;34m"
-BLU="\033[1;34m"
-RED="\033[1;31m"
-LRED="\033[7;31m"
-WHI="\033[1;37m"
-NC="\033[0m"
-YELLOW="\033[1;33m"
-GREL="\033[7;32m"
-GRE="\033[1;32m"
-PROFD=/etc/profile.d
-CONFIG=$HOME/.pacitude
-# export
-export TEXTDOMAINDIR=/usr/share/locale
-export TEXTDOMAIN=pacitude
+apptitle="pacitude"
 
-logo () {
-	cat <<-EOF
 
-                    @@@@@@@@@@@@@@@@@@                    
-                @@@@@@@@@@@@@@@@@@@@@@@@@@                
-              @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@              
-            @@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@            
-            @@@@@@@@@@@@@@      @@@@@@@@@@@@@@@@          
-                @@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@          
-                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
-                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
-                        @@@@@@@@@@@@@@@@@@@@@@@@@@        
-                          @@@@@@@@@@@@@@@@@@@@@@@@        
-                            @@@@@@@@@@@@@@@@@@@@@@        
-                          @@@@@@@@@@@@@@@@@@@@@@@@        
-                        @@@@@@@@@@@@@@@@@@@@@@@@@@        
-                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
-                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
-                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          
-            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          
-            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@            
-              @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@              
-                @@@@@@@@@@@@@@@@@@@@@@@@@@                
-                    @@@@@@@@@@@@@@@@@@                    
-
-EOF
+# --------------------------------------------------------
+mainmenu(){
+  if [ "$1" = "" ]; then
+    nextitem="."
+  else
+    nextitem=$1
+  fi
+  options=()
+  options+=("1)" "Sync DB")
+  options+=("2)" "Update System")
+  options+=("3)" "Install Packages")
+  options+=("4)" "Remove Packages")
+  options+=("5)" "Update Packages")
+  options+=("6)" "Remove Dependencies")
+  options+=("7)" "Search Packages")
+  options+=("8)" "Belongs To Files")
+  options+=("9)" "Package Info")
+  options+=("10)" "Clear Cache")
+  options+=("11)" "PacDiff Viewer")
+  options+=("12)" "Edit pacman.conf")
+  options+=("13)" "Edit mirrorlist")
+  options+=("14)" "Pacman DB Optimize")
+  options+=("15)" "Pacman DB Upgrade")
+  options+=("16)" "Pacman Log")
+  sel=$(whiptail --backtitle "$apptitle" --menu "" --cancel-button "$txtexit" --default-item "$nextitem" 0 0 0 \
+    "${options[@]}" \
+    3>&1 1>&2 2>&3)
+  if [ "$?" = "0" ]; then
+    case $sel in
+      "1)")
+        pacaur -Sy
+      ;;
+      "2)")
+		    pacaur -Su
+      ;;
+      "3)")
+		  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose package(s) to install" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
+		  if [ "$?" = "0" ]; then
+    	  clear
+    	  pacaur -S $pkgs
+ 		  fi
+ 	  ;;
+      "4)")
+		  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose package(s) to remove" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
+		  if [ "$?" = "0" ]; then
+    	  clear
+    	  pacaur -R $pkgs
+ 		  fi
+      ;;
+      "5)")
+      	  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose Package to update(exact filepath)" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
+		  if [ "$?" = "0" ]; then
+    	  clear
+    	  pacaur -U $pkgs
+    	  fi
+      ;;
+      "6)")
+		  if [ "$?" = "0" ]; then
+		  clear
+          pacaur -R $(pacaur -Qdtq)
+      	  fi
+      ;;
+      "7)")
+		  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose package(s) to search for" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
+		  if [ "$?" = "0" ]; then
+    	  clear
+    	  pacaur -Ss $pkgs
+ 		  fi
+      ;;
+      "8)")
+		  pkgs=$(whiptail --backtitle "$apptitle" --title "" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
+		  if [ "$?" = "0" ]; then
+    	  clear
+    	  pacaur -Qo $pkgs
+    	  fi
+      ;;
+      "9)")
+		  pkgs=$(whiptail --backtitle "$apptitle" --title "Package Info" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
+		  if [ "$?" = "0" ]; then
+    	  clear
+    	  pacaur -Qi $pkgs
+    	  fi
+      ;;
+      "10)")
+    	  pacaur -Scc
+      ;;
+      "11)")
+		  pkgs=$(whiptail --backtitle "$apptitle" --title "" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
+		  if [ "$?" = "0" ]; then
+    	  clear
+    	  pacaur -Qo $pkgs
+    	  fi
+      ;;
+      "12)")
+		  chooseeditor
+		  sudo $EDITOR /etc/pacman.conf
+      ;;
+      "13)")
+		  chooseeditor
+		  sudo $EDITOR /etc/pacman.d/mirrorlist
+	  ;;
+	  "14)")
+		  sudo pacman-optimize
+	  ;;
+	  "15)")
+		  sudo pacman-db-upgrade 
+	  ;;
+	  "16)")
+		  chooselogviewer
+		  $VIEWER /var/log/pacman.log
+	  ;;
+    esac
+    mainmenu "$nextitem"
+  else
+    clear
+  fi
 }
 
-### Start Script ###
-gost () {
-    clear	
+#-----------------------------------------------------------
 
-    logo
-    
-    echo -e "$GREL                  pacitude $VER - A bash GUI for pacaur                 $NC"
-    echo -e ""
-    echo -e "$(gettext '[1] Sync DB		[9] Info Packages    [H] Help pacitude')"
-    echo -e "$(gettext '[2] Update System	[10] Clear cache     [Q] Quit')"
-    echo -e "$(gettext '[3] Install Packages    [11] PacDiffViewer')"
-    echo -e "$(gettext '[4] Remove Packages	[12] Edit pacman.conf')"
-    echo -e "$(gettext '[5] Update Packages	[13] Edit mirrorlist')"
-    echo -e "$(gettext '[6] Remove Dependencies [14] Pacman DB Optomize')"
-    echo -e "$(gettext '[7] Search Packages	[15] Pacman DB Upgrade')"
-    echo -e "$(gettext '[8] Belongs To Files	[L] Log Pacman')"
-    echo -e ""
-    echo -e ""$YELLOW"$(gettext 'Run a Command or Number'):$NC"
-  read opt
-case $opt in
-
-### SyncDB ###
-1|"pacaur -Sy")
-    echo -e "$GRE==> $(gettext 'DB Synchronization in progress...')$NC"
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -Sy $NC "
-  pacaur -Sy
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
+chooseeditor(){
+  options=()
+  options+=("nano" "")
+  options+=("vim" "")
+  options+=("vi" "")
+  options+=("edit" "")
+  sel=$(whiptail --backtitle "$apptitle" --title "Choose an editor" --menu "" 0 0 0 \
+    "${options[@]}" \
+    3>&1 1>&2 2>&3)
+  if [ "$?" = "0" ]; then
+    clear
+    echo "export EDITOR=$sel"
+    export EDITOR=$sel
+    EDITOR=$sel
+    pressanykey
+  fi
 }
-  pause
-gost
-;;
 
-#### UpdateSystem ####
-2|"pacaur -Su")
-    echo -e ""
-    echo -e "$GRE==> $(gettext 'Update in progress.... !!!Please Wait!!!')$NC"
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -Su $NC"
-  pacaur -Su
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
+#--------------------------------------------------------------
+
+chooselogviewer(){
+  options=()
+  options+=("more" "")
+  options+=("cat" "")
+  options+=("less" "")
+  sel=$(whiptail --backtitle "$apptitle" --title "Choose a log viewer" --menu "" 0 0 0 \
+    "${options[@]}" \
+    3>&1 1>&2 2>&3)
+  if [ "$?" = "0" ]; then
+    clear
+    echo "export VIEWER=$sel"
+    export VIEWER=$sel
+    VIEWER=$sel
+    pressanykey
+  fi
 }
-  pause
-gost
-;;
 
-### InstallPackages ###
-3|"pacaur -S")
-    echo -e "$GRE $(gettext 'Which packages do you want install?')$NC"
-  read PKG 
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -S $PKG $NC"
-  pacaur -S $PKG
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
+#--------------------------------------------------------
+pressanykey(){
+  read -n1 -p "$txtpressanykey"
 }
-  pause
-gost
-;;
 
-### RemovePackages ###
-4|"pacaur -R")
-    echo -e "$GRE $(gettext 'Which Package do you want remove?')$NC"
-  read PKR 
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -R $PKR $NC"
-  pacaur -R $PKR
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
+loadstrings(){
+  txtexit="Exit"
+  txtmainmenu="Main Menu"
+  txtpressanykey="Press any key to continue."
 }
-  pause
-gost
-;;
 
-### UpdatePackages ###
-5|"pacaur -U")
-    echo -e "$GRE $(gettext 'Which packages do you want upgrade?') $NC"
-  read PKAG
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -U $PKAG $NC"
-  pacaur -U $PKAG 
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
+# --------------------------------------------------------
+  loadstrings
+  EDITOR=nano
+  mainmenu
 
-### RemoveDependencies ###
-6|"pacaur -Qdtq")
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -R "\$"(pacaur -Qdtq) $NC"
-  pacaur -R $(pacaur -Qdtq)
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-
-### Search Packages ###
-7|"pacaur -Ss")
-    echo -e "$GRE $(gettext 'Which packages do you want search?') $NC"
-  read PKAGE
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -Ss $PKAGE $NC"
-  pacaur -Ss $PKAGE 
-      echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-
-### belong file ###
-8|"pacaur -Qo")
-    echo -e "$GRE $(gettext 'Which packages do you want search?') $NC"
-  read PKAGE3
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -Qo $PKAGE3 $NC"
-  pacaur -Qo $PKAGE3 
-      echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-
-### InfoPackage ###
-9|"pacaur -Qi")
-    echo -e ""$GRE" $(gettext 'Which packages do you want search?')$NC"
-  read PKS
-  clear
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -Qi $PKS $NC"
-    echo -e	""
-  pacaur -Qi $PKS
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-
-### ClearCache ###
-10|"pacaur -Scc")
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -Scc $NC"	
-  pacaur -Scc
-  rm -rf $HOME/.cache/pacaur/*
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-
-### PacDiffViewer ###
-11|"pacaur -C")
-  clear
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacaur -C $NC"
-    echo -e""
-  pacaur -C
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-
-### edit pacman.conf ###
-12|"edit pacman.conf")
-    echo -e ""$GRE"$(gettext 'Which program do you want to use?')$NC"
-    echo -e ""$GRE"$(gettext 'Write'): [N]nano [V]vim $NC"
-  read PROGRAM
-case $PROGRAM in
-N|n|nano)
-  sudo nano /etc/pacman.conf
-gost
-;;
-V|v|vi|VI|vim|VIM)
-if [ -f /usr/bin/vim ]; then
-  sudo vim /etc/pacman.conf
-else
-  sudo vi /etc/pacman.conf
-fi
-gost
-;;
-esac
-gost
-;;
-
-### edit mirrorlist ###
-13|"edit mirrorlist")
-    echo -e ""$GRE"$(gettext 'Which program do you want to use?')$NC"
-    echo -e ""$GRE"$(gettext 'Write'): [N]nano [V]vim $NC"
-  read PROGRAM
-case $PROGRAM in
-N|n|nano)
-  sudo nano /etc/pacman.d/mirrorlist
-gost
-;;
-V|v|vi|VI|vim|VIM)
-if [ -f /usr/bin/vim ]; then
-  sudo vim /etc/pacman.d/mirrorlist
-else
-  sudo vi /etc/pacman.d/mirrorlist
-fi
-gost
-;;
-esac
-gost
-;;
-
-### pacman-optimize ###
-14|"pacaur -C")
-  clear
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacman-optimize$NC"
-    echo -e""
-  sudo pacman-optimize  
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-
-### pacman-db-upgrade ###
-15|"pacaur -C")
-    echo -e "$YELLOW==> $(gettext 'COMMAND'): pacman-db-upgrade$NC"
-    echo -e""
-  sudo pacman-db-upgrade  
-    echo -e ""$GRE"$(gettext 'Upgrade successfully')$NC"
-sleep 3
-gost
-;;
-
-### Log Pacman file ###
-l|L|log|"log pacman")
-    echo -e ""$GRE"$(gettext 'Which programs do you want use?')$NC"
-    echo -e ""$GRE"$(gettext 'Write'): [M]more [C]cat [L]less]$NC"
-  read PROGRAM
-case $PROGRAM in
-l|L|less)
-clear
-  sudo less /var/log/pacman.log
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-m|M|more)
-  sudo more /var/log/pacman.log
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-c|C|cat)
-  sudo cat /var/log/pacman.log
-    echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-esac
-gost
-;;
-
-### Help ###
-H|h)
-  clear
-    echo -e ""
-    echo -e "$GREL !!!$(gettext 'GUIDE TO USE SCRIPT')!!! $NC"
-    echo -e ""
-      echo -e "$YELLOW==>$GRE [1]$NC "$(gettext 'To synchronize DB')""
-      echo -e "$YELLOW==>$GRE [2]$NC "$(gettext 'To update the system')""
-      echo -e "$YELLOW==>$GRE [4]$NC "$(gettext 'To install a package')""
-      echo -e "$YELLOW==>$GRE [5]$NC "$(gettext 'To remove a package')""
-      echo -e "$YELLOW==>$GRE [6]$NC "$(gettext 'To update a package')""
-      echo -e "$YELLOW==>$GRE [7]$NC "$(gettext 'To remove unused dependencies')""
-      echo -e "$YELLOW==>$GRE [8]$NC "$(gettext 'To search packages')""
-      echo -e "$YELLOW==>$GRE [9]$NC "$(gettext 'To view a file belonging to a package')""
-      echo -e "$YELLOW==>$GRE [10]$NC "$(gettext 'To query local database about info on a package')""
-      echo -e "$YELLOW==>$GRE [11]$NC "$(gettext 'To clean the cache')""
-      echo -e "$YELLOW==>$GRE [12]$NC "$(gettext 'To modify') /etc/pacman.conf""      
-      echo -e "$YELLOW==>$GRE [13]$NC "$(gettext 'To optimize pacman')""
-      echo -e "$YELLOW==>$GRE [14]$NC "$(gettext 'To run pacman-db-upgrade')""
-      echo -e "$YELLOW==>$GRE [l]$NC  "$(gettext 'To view the pacman logs')""
-      echo -e "$YELLOW==>$GRE [H]$NC "$(gettext 'To see this menu')""
-      echo -e "$YELLOW==>$GRE [Q]$NC "$(gettext 'To exit the script')""  
-echo -e ""
-    echo -e ""$GRE"$(gettext 'Press ENTER to display the Menu')$NC"
-  function pause(){
-  read -p "$*"
-}
-  pause
-gost
-;;
-
-### Quit ###
-Q|q|quit|exit)
-    echo -e ""$GRE"$(gettext 'Do you really want exit? y/n [default yes]')$NC"
-  read SNE
-case $SNE in
-$(gettext 'y')|"")
-  clear
-    echo -e "$GREL                  pacitude $VER - A bash GUI for pacaur                 $NC"
-  exit
-;;
-n|N)
-gost
-;;
-*)
-    echo -e ""
-    echo -e ""$RED"$(gettext '!!!WARNING!!! Unknown command!!') $NC"
-  sleep 1
-gost
-;;
-esac
-;;
-
-### error ###
-*)
-    echo -e ""
-    echo -e ""$RED"$(gettext '!!!WARNING!!! Unknown command!!') $NC"
-  sleep 1
-gost
-;;
-esac
-}
-gost
-### end script ###
+exit 0
+# --------------------------------------------------------
