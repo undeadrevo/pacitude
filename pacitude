@@ -78,7 +78,8 @@ mainmenu(){
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -Ss $pkgs
- 		  fi
+        pressanykey
+   		  fi
       ;;
       "8)")
 		  pkgs=$(whiptail --backtitle "$apptitle" --title "" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
@@ -170,7 +171,9 @@ chooselogviewer(){
 
 #--------------------------------------------------------
 pressanykey(){
+  echo -e "\033[1;33m"
   read -n1 -p "$txtpressanykey"
+  echo -e "\033[0m"
 }
 
 loadstrings(){
