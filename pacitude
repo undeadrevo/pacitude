@@ -19,6 +19,7 @@ mainmenu(){
     nextitem=$1
   fi
   options=()
+  options+=("0)" "Update Mirror List")
   options+=("1)" "Sync DB")
   options+=("2)" "Update System")
   options+=("3)" "Install Packages")
@@ -32,14 +33,18 @@ mainmenu(){
   options+=("11)" "PacDiff Viewer")
   options+=("12)" "Edit pacman.conf")
   options+=("13)" "Edit mirrorlist")
-  options+=("14)" "Pacman DB Optimize")
-  options+=("15)" "Pacman DB Upgrade")
-  options+=("16)" "Pacman Log")
+  options+=("14)" "Pacman PGP Key Refresh")
+  options+=("15)" "Pacman DB Optimize")
+  options+=("16)" "Pacman DB Upgrade")
+  options+=("17)" "Pacman Log")
   sel=$(whiptail --backtitle "$apptitle" --menu "" --cancel-button "$txtexit" --default-item "$nextitem" 0 0 0 \
     "${options[@]}" \
     3>&1 1>&2 2>&3)
   if [ "$?" = "0" ]; then
     case $sel in
+      "0)")
+        sudo reflector -l 5 -p http --save /etc/pacman.d/mirrorlist
+      ;;
       "1)")
         pacaur -Sy
       ;;
@@ -114,12 +119,15 @@ mainmenu(){
 		  sudo $EDITOR /etc/pacman.d/mirrorlist
 	  ;;
 	  "14)")
-		  sudo pacman-optimize
+		  sudo pacman-key --refresh
 	  ;;
 	  "15)")
-		  sudo pacman-db-upgrade 
+		  sudo pacman-optimize
 	  ;;
 	  "16)")
+		  sudo pacman-db-upgrade 
+	  ;;
+	  "17)")
 		  chooselogviewer
 		  $VIEWER /var/log/pacman.log
 	  ;;
@@ -134,9 +142,11 @@ mainmenu(){
 
 chooseeditor(){
   options=()
+  options+=("kilo" "")
   options+=("nano" "")
-  options+=("vim" "")
+  options+=("pico" "")
   options+=("vi" "")
+  options+=("vim" "")
   options+=("edit" "")
   sel=$(whiptail --backtitle "$apptitle" --title "Choose an editor" --menu "" 0 0 0 \
     "${options[@]}" \
