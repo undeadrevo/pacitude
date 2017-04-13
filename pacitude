@@ -19,115 +19,120 @@ mainmenu(){
     nextitem=$1
   fi
   options=()
-  options+=("0)" "Update Mirror List")
-  options+=("1)" "Sync DB")
-  options+=("2)" "Update System")
-  options+=("3)" "Install Packages")
-  options+=("4)" "Remove Packages")
-  options+=("5)" "Update Packages")
-  options+=("6)" "Remove Dependencies")
-  options+=("7)" "Search Packages")
-  options+=("8)" "Belongs To Files")
-  options+=("9)" "Package Info")
-  options+=("10)" "Clear Cache")
-  options+=("11)" "PacDiff Viewer")
-  options+=("12)" "Edit pacman.conf")
-  options+=("13)" "Edit mirrorlist")
-  options+=("14)" "Pacman PGP Key Refresh")
-  options+=("15)" "Pacman DB Optimize")
-  options+=("16)" "Pacman DB Upgrade")
-  options+=("17)" "Pacman Log")
+  options+=("1)" "Update Mirror List")
+  options+=("2)" "Sync DB")
+  options+=("3)" "Update System")
+  options+=("4)" "Install Packages")
+  options+=("5)" "Remove Packages")
+  options+=("6)" "Update Packages")
+  options+=("7)" "Remove Dependencies")
+  options+=("8)" "Search Packages")
+  options+=("9)" "Belongs To Files")
+  options+=("10)" "Package Info")
+  options+=("11)" "Clear Cache")
+  options+=("12)" "PacDiff Viewer")
+  options+=("13)" "Edit pacman.conf")
+  options+=("14)" "Edit mirrorlist")
+  options+=("15)" "Edit makepkg.conf")
+  options+=("16)" "Pacman PGP Key Refresh")
+  options+=("17)" "Pacman DB Optimize")
+  options+=("18)" "Pacman DB Upgrade")
+  options+=("19)" "Pacman Log")
   sel=$(whiptail --backtitle "$apptitle" --menu "" --cancel-button "$txtexit" --default-item "$nextitem" 0 0 0 \
     "${options[@]}" \
     3>&1 1>&2 2>&3)
   if [ "$?" = "0" ]; then
     case $sel in
-      "0)")
-        sudo reflector -l 5 -p http --save /etc/pacman.d/mirrorlist
+    "1)")
+      sudo reflector -l 5 -p http --save /etc/pacman.d/mirrorlist
+    ;;
+    "2)")
+      pacaur -Sy
       ;;
-      "1)")
-        pacaur -Sy
-      ;;
-      "2)")
-		    pacaur -Su
-      ;;
-      "3)")
+    "3)")
+		  pacaur -Su
+    ;;
+    "4)")
 		  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose package(s) to install" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -S $pkgs
  		  fi
  	  ;;
-      "4)")
+    "5)")
 		  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose package(s) to remove" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -R $pkgs
  		  fi
       ;;
-      "5)")
+    "6)")
       	  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose Package to update(exact filepath)" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -U $pkgs
     	  fi
       ;;
-      "6)")
+    "7)")
 		  if [ "$?" = "0" ]; then
 		  clear
           pacaur -R $(pacaur -Qdtq)
       	  fi
-      ;;
-      "7)")
+    ;;
+    "8)")
 		  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose package(s) to search for" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -Ss $pkgs
         pressanykey
    		  fi
-      ;;
-      "8)")
+    ;;
+    "9)")
 		  pkgs=$(whiptail --backtitle "$apptitle" --title "" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -Qo $pkgs
     	  fi
-      ;;
-      "9)")
+    ;;
+    "10)")
 		  pkgs=$(whiptail --backtitle "$apptitle" --title "Package Info" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -Qi $pkgs
     	  fi
-      ;;
-      "10)")
+    ;;
+    "11)")
     	  pacaur -Scc
-      ;;
-      "11)")
+    ;;
+    "12)")
 		  pkgs=$(whiptail --backtitle "$apptitle" --title "" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -Qo $pkgs
     	  fi
-      ;;
-      "12)")
+    ;;
+    "13)")
 		  chooseeditor
 		  sudo $EDITOR /etc/pacman.conf
-      ;;
-      "13)")
+    ;;
+    "14)")
 		  chooseeditor
 		  sudo $EDITOR /etc/pacman.d/mirrorlist
-	  ;;
-	  "14)")
+    ;;
+    "15)")
+      chooseeditor
+      sudo $EDITOR /etc/makepkg.conf
+    ;;
+	  "16)")
 		  sudo pacman-key --refresh
 	  ;;
-	  "15)")
+	  "17)")
 		  sudo pacman-optimize
 	  ;;
-	  "16)")
+	  "18)")
 		  sudo pacman-db-upgrade 
 	  ;;
-	  "17)")
+	  "19)")
 		  chooselogviewer
 		  $VIEWER /var/log/pacman.log
 	  ;;
