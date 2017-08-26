@@ -44,39 +44,47 @@ mainmenu(){
   if [ "$?" = "0" ]; then
     case $sel in
     "1)")
-      sudo reflector -l 5 -p http --save /etc/pacman.d/mirrorlist
+      	  sudo reflector -l 5 -p http --save /etc/pacman.d/mirrorlist
+      	  echo "Mirrorlist updated"
+      	  pressanykey
     ;;
     "2)")
-      pacaur -Sy
-      ;;
+      	  pacaur -Sy
+      	  pressanykey
+    ;;
     "3)")
 		  pacaur -Su
+		  pressanykey
     ;;
     "4)")
 		  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose package(s) to install" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -S $pkgs
+    	  pressanykey
  		  fi
- 	  ;;
+ 	;;
     "5)")
 		  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose package(s) to remove" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -R $pkgs
+    	  pressanykey
  		  fi
-      ;;
+    ;;
     "6)")
       	  pkgs=$(whiptail --backtitle "$apptitle" --title "Choose Package to update(exact filepath)" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -U $pkgs
+    	  pressanykey
     	  fi
-      ;;
+    ;;
     "7)")
 		  if [ "$?" = "0" ]; then
 		  clear
           pacaur -R $(pacaur -Qdtq)
+          pressanykey
       	  fi
     ;;
     "8)")
@@ -84,7 +92,7 @@ mainmenu(){
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -Ss $pkgs
-        pressanykey
+          pressanykey
    		  fi
     ;;
     "9)")
@@ -92,6 +100,7 @@ mainmenu(){
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -Qo $pkgs
+    	  pressanykey
     	  fi
     ;;
     "10)")
@@ -99,16 +108,19 @@ mainmenu(){
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -Qi $pkgs
+    	  pressanykey
     	  fi
     ;;
     "11)")
     	  pacaur -Scc
+    	  pressanykey
     ;;
     "12)")
 		  pkgs=$(whiptail --backtitle "$apptitle" --title "" --inputbox "" 0 0 "" 3>&1 1>&2 2>&3)
 		  if [ "$?" = "0" ]; then
     	  clear
     	  pacaur -Qo $pkgs
+    	  pressanykey
     	  fi
     ;;
     "13)")
@@ -120,22 +132,25 @@ mainmenu(){
 		  sudo $EDITOR /etc/pacman.d/mirrorlist
     ;;
     "15)")
-      chooseeditor
-      sudo $EDITOR /etc/makepkg.conf
+    	  chooseeditor
+    	  sudo $EDITOR /etc/makepkg.conf
     ;;
-	  "16)")
+	"16)")
 		  sudo pacman-key --refresh
-	  ;;
-	  "17)")
+		  pressanykey
+	;;
+	"17)")
 		  sudo pacman-optimize
-	  ;;
-	  "18)")
-		  sudo pacman-db-upgrade 
-	  ;;
-	  "19)")
+		  pressanykey
+	;;
+	"18)")
+		  sudo pacman-db-upgrade
+		  pressanykey
+	;;
+	"19)")
 		  chooselogviewer
 		  $VIEWER /var/log/pacman.log
-	  ;;
+	;;
     esac
     mainmenu "$nextitem"
   else
@@ -147,6 +162,7 @@ mainmenu(){
 
 chooseeditor(){
   options=()
+  options+=("slap" "")
   options+=("kilo" "")
   options+=("nano" "")
   options+=("pico" "")
